@@ -54,6 +54,7 @@ end
  
 local state = savestate.create()
 while true do
+    emu.frameadvance()
     savestate.save(state)
     i = 0
     while memory.readbyte(species_addr) == 0 do

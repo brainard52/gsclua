@@ -38,6 +38,15 @@ end
 local partysize = memory.readbyte(base_address)
 local dv_addr = (base_address + 0x1d) + partysize * 0x30;
 
+function press(button, delay)
+    i = 0
+    while i < delay do
+        joypad.set(1, button)
+        i = i + 1
+        emu.frameadvance()
+    end
+end
+
 function shiny(atkdef,spespc)
     if spespc == 0xAA then
         if atkdef == 0x2A or atkdef == 0x3A or atkdef == 0x6A or atkdef == 0x7A or atkdef == 0xAA or atkdef == 0xBA or atkdef == 0xEA or atkdef == 0xFA then
@@ -51,9 +60,10 @@ state = savestate.create()
 while true do
     savestate.save(state)
     while memory.readbyte(base_address) == partysize do
-        joypad.set(1, {A=true})
-        emu.frameadvance()
+        press({A = true}, 10)
+	emu.frameadvance()
     end
+
     emu.frameadvance()
     atkdef = memory.readbyte(dv_addr)
     spespc = memory.readbyte(dv_addr + 1)
